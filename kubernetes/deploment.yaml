@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeus-controller
+spec:
+  selector:
+    app: zeus-controller
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +30,8 @@ spec:
       containers:
         - name: zeus-controller
           image: ghcr.io/picus92/zeus-controller:latest
+          ports:
+            - containerPort: 5000
           envFrom:
             - configMapRef:
-                name: postgres_config
+                name: postgres-config
