@@ -18,7 +18,6 @@ try:
         password=db_pass
     )
 except psycopg2.OperationalError as e:
-    print(db_host, db_name, db_user, db_pass)
     print("Error connecting to the database: ", e)
     sys.exit(1)
 
