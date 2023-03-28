@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request
 import psycopg2
+import sys
 
 app = Flask(__name__)
 
@@ -13,6 +14,7 @@ try:
     )
 except psycopg2.OperationalError as e:
     print("Error connecting to the database: ", e)
+    sys.exit(1)
 
 @app.route('/register-node', methods=['POST'])
 def register_node():
