@@ -5,16 +5,23 @@ import sys
 
 app = Flask(__name__)
 
+db_host = os.environ.get('POSTGRES_HOST'),
+db_name = os.environ.get('POSTGRES_DB'),
+db_user = os.environ.get('POSTGRES_USER'),
+db_pass = os.environ.get('POSTGRES_PASSWORD')
+
 try:
     dbConn = psycopg2.connect(
-        host=os.environ.get('POSTGRES_HOST'),
-        database=os.environ.get('POSTGRES_DB'),
-        user=os.environ.get('POSTGRES_USER'),
-        password=os.environ.get('POSTGRES_PASSWORD')
+        host=db_host
+        database=db_name
+        user=db_user
+        password=db_pass
     )
 except psycopg2.OperationalError as e:
+    print(db_host, db_name, db_user, db_pass)
     print("Error connecting to the database: ", e)
     sys.exit(1)
+
 
 @app.route('/register-node', methods=['POST'])
 def register_node():
@@ -30,13 +37,15 @@ def register_node():
 
     try:
         cursor = dbConn.cursor()
-        cursor.execute("INSERT INTO nodes (node_id, node_name, node_ip, node_az) VALUES (%s, %s, %s)", (node_id, node_name, node_ip, node_az))
+        cursor.execute("INSERT INTO nodes (node_id, node_name, node_ip, node_az) VALUES (%s, %s, %s)",
+                       (node_id, node_name, node_ip, node_az))
         dbConn.commit()
     except psycopg2.Error as e:
         print("Error inserting data into the database: ", e)
         return "Error registering node: " + str(e), 500
 
     return "Node registered successfully!"
+
 
 if __name__ == '__main__':
     app.run()
