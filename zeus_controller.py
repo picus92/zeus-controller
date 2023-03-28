@@ -19,10 +19,11 @@ except psycopg2.OperationalError as e:
 @app.route('/register-node', methods=['POST'])
 def register_node():
     data = request.get_json()
-    node_id = data.get('node-id')
-    node_name = data.get('node-name')
-    node_ip = data.get('node-ip')
-    node_az = data.get('node-az')
+    node_id = data.get('node_id')
+    node_name = data.get('node_name')
+    node_ip = data.get('node_ip')
+    node_az = data.get('node_az')
+    node_az_id = data.get('node_az_id')
 
     if not node_id or not node_name or not node_ip or not node_az:
         return "Error registering node: Missing required parameters", 400
