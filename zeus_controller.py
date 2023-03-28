@@ -17,16 +17,17 @@ except psycopg2.OperationalError as e:
 @app.route('/register-node', methods=['POST'])
 def register_node():
     data = request.get_json()
+    node_id = data.get('node-id')
     node_name = data.get('node-name')
     node_ip = data.get('node-ip')
     node_az = data.get('node-az')
 
-    if not node_name or not node_ip or not node_az:
+    if not node_id or not node_name or not node_ip or not node_az:
         return "Error registering node: Missing required parameters", 400
 
     try:
         cursor = dbConn.cursor()
-        cursor.execute("INSERT INTO nodes (node_name, node_ip, node_az) VALUES (%s, %s, %s)", (node_name, node_ip, node_az))
+        cursor.execute("INSERT INTO nodes (node_id, node_name, node_ip, node_az) VALUES (%s, %s, %s)", (node_id, node_name, node_ip, node_az))
         dbConn.commit()
     except psycopg2.Error as e:
         print("Error inserting data into the database: ", e)
